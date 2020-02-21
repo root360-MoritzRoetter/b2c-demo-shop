@@ -535,14 +535,14 @@ foreach ($rabbitConnections as $key => $connection) {
 /* Search service */
 $config[SearchConstants::ELASTICA_PARAMETER__HOST]
     = $config[SearchElasticsearchConstants::HOST]
-    = getenv('SPRYKER_SEARCH_HOST');
+    = getenv('ELASTICSEARCH_HOST:');
 $ELASTICA_TRANSPORT_PROTOCOL = 'http';
 $config[SearchConstants::ELASTICA_PARAMETER__TRANSPORT]
     = $config[SearchElasticsearchConstants::TRANSPORT]
     = $ELASTICA_TRANSPORT_PROTOCOL;
 $config[SearchConstants::ELASTICA_PARAMETER__PORT]
     = $config[SearchElasticsearchConstants::PORT]
-    = getenv('SPRYKER_SEARCH_PORT');
+    = getenv('ELASTICSEARCH_PORT:');
 $ELASTICA_AUTH_HEADER = null;
 $config[SearchConstants::ELASTICA_PARAMETER__AUTH_HEADER]
     = $config[SearchElasticsearchConstants::AUTH_HEADER]
@@ -560,7 +560,10 @@ $config[SearchConstants::FULL_TEXT_BOOSTED_BOOSTING_VALUE]
 /* End Search service */
 
 // ---------- KV storage
-$config[StorageConstants::STORAGE_KV_SOURCE] = strtolower(getenv('SPRYKER_KEY_VALUE_STORE_ENGINE'));
+$stores_indexed       = explode(' ',getenv('STORES'));
+$redisDatabaseCounter = array_search($applicationStore, $stores_indexed) + 1; // +1 to avoid "invalid db-index" error
+
+$config[StorageConstants::STORAGE_KV_SOURCE] = 'redis';
 
 /**
  * Data source names are used exclusively when set, e.g. no other Redis storage configuration will be used for the client.
@@ -571,11 +574,11 @@ $config[StorageConstants::STORAGE_KV_SOURCE] = strtolower(getenv('SPRYKER_KEY_VA
 //$config[StorageRedisConstants::STORAGE_REDIS_DATA_SOURCE_NAMES] = [];
 
 $config[StorageRedisConstants::STORAGE_REDIS_PERSISTENT_CONNECTION] = true;
-$config[StorageRedisConstants::STORAGE_REDIS_PROTOCOL] = 'tcp';
-$config[StorageRedisConstants::STORAGE_REDIS_HOST] = getenv('SPRYKER_KEY_VALUE_STORE_HOST');
-$config[StorageRedisConstants::STORAGE_REDIS_PORT] = getenv('SPRYKER_KEY_VALUE_STORE_PORT');
+$config[StorageRedisConstants::STORAGE_REDIS_PROTOCOL] = 'redis';
+$config[StorageRedisConstants::STORAGE_REDIS_HOST] = getenv('STORAGE_REDIS_HOST:');
+$config[StorageRedisConstants::STORAGE_REDIS_PORT] = getenv('STORAGE_REDIS_PORT:');
 $config[StorageRedisConstants::STORAGE_REDIS_PASSWORD] = false;
-$config[StorageRedisConstants::STORAGE_REDIS_DATABASE] = getenv('SPRYKER_KEY_VALUE_STORE_NAMESPACE');
+$config[StorageRedisConstants::STORAGE_REDIS_DATABASE] = $redisDatabaseCounter;
 
 // ---------- Session
 $config[SessionConstants::YVES_SESSION_SAVE_HANDLER] = SessionRedisConfig::SESSION_HANDLER_REDIS_LOCKING;
@@ -604,11 +607,11 @@ $config[SessionRedisConstants::LOCKING_LOCK_TTL_MILLISECONDS] = 0;
  */
 //$config[SessionRedisConstants::YVES_SESSION_REDIS_DATA_SOURCE_NAMES] = [];
 
-$config[SessionRedisConstants::YVES_SESSION_REDIS_PROTOCOL] = 'tcp';
-$config[SessionRedisConstants::YVES_SESSION_REDIS_HOST] = getenv('SPRYKER_SESSION_FE_HOST');
-$config[SessionRedisConstants::YVES_SESSION_REDIS_PORT] = getenv('SPRYKER_SESSION_FE_PORT');
+$config[SessionRedisConstants::YVES_SESSION_REDIS_PROTOCOL] = 'redis';
+$config[SessionRedisConstants::YVES_SESSION_REDIS_HOST] = getenv('YVES_SESSION_REDIS_HOST');
+$config[SessionRedisConstants::YVES_SESSION_REDIS_PORT] = getenv('YVES_SESSION_REDIS_PORT');
 $config[SessionRedisConstants::YVES_SESSION_REDIS_PASSWORD] = false;
-$config[SessionRedisConstants::YVES_SESSION_REDIS_DATABASE] = getenv('SPRYKER_SESSION_FE_NAMESPACE');
+$config[SessionRedisConstants::YVES_SESSION_REDIS_DATABASE] = $redisDatabaseCounter;
 
 /**
  * Data source names are used exclusively when set, e.g. no other Redis session configuration will be used for the client.
@@ -618,11 +621,11 @@ $config[SessionRedisConstants::YVES_SESSION_REDIS_DATABASE] = getenv('SPRYKER_SE
  */
 //$config[SessionRedisConstants::ZED_SESSION_REDIS_DATA_SOURCE_NAMES] = [];
 
-$config[SessionRedisConstants::ZED_SESSION_REDIS_PROTOCOL] = 'tcp';
-$config[SessionRedisConstants::ZED_SESSION_REDIS_HOST] = getenv('SPRYKER_SESSION_BE_HOST');
-$config[SessionRedisConstants::ZED_SESSION_REDIS_PORT] = getenv('SPRYKER_SESSION_BE_PORT');
+$config[SessionRedisConstants::ZED_SESSION_REDIS_PROTOCOL] = 'redis';
+$config[SessionRedisConstants::ZED_SESSION_REDIS_HOST] = getenv('ZED_SESSION_REDIS_HOST');
+$config[SessionRedisConstants::ZED_SESSION_REDIS_PORT] = getenv('ZED_SESSION_REDIS_PORT');
 $config[SessionRedisConstants::ZED_SESSION_REDIS_PASSWORD] = false;
-$config[SessionRedisConstants::ZED_SESSION_REDIS_DATABASE] = getenv('SPRYKER_SESSION_BE_NAMESPACE');
+$config[SessionRedisConstants::ZED_SESSION_REDIS_DATABASE] = $redisDatabaseCounter;
 
 /* Mail */
 $config[MailConstants::SMTP_HOST] = getenv('SPRYKER_SMTP_HOST');
