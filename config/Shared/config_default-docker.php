@@ -73,7 +73,7 @@ use SprykerShop\Shared\CalculationPage\CalculationPageConstants;
 use SprykerShop\Shared\ErrorPage\ErrorPageConstants;
 use SprykerShop\Shared\WebProfilerWidget\WebProfilerWidgetConstants;
 use Twig\Cache\FilesystemCache;
-
+$applicationStore = strtoupper(Store::getInstance()->getStoreName());
 $CURRENT_STORE = Store::getInstance()->getStoreName();
 
 /* ZED */
