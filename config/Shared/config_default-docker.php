@@ -45,7 +45,6 @@ $config[ApplicationConstants::ELASTICA_PARAMETER__INDEX_NAME]
 = $config[CollectorConstants::ELASTICA_PARAMETER__INDEX_NAME]
 = $config[SearchConstants::ELASTICA_PARAMETER__INDEX_NAME]
 = strtolower($applicationStore).'_search';
-unset($config[SearchConstants::ELASTICA_PARAMETER__AUTH_HEADER]);
 $config[SearchConstants::ELASTICA_PARAMETER__TRANSPORT] = getenv('ELASTICSEARCH_PROTOCOL');
 $config[SearchConstants::ELASTICA_PARAMETER__HOST] = getenv('ELASTICSEARCH_HOST');
 $config[SearchConstants::ELASTICA_PARAMETER__PORT] = getenv('ELASTICSEARCH_PORT');
